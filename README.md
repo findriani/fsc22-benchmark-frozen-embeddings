@@ -2,8 +2,7 @@
 
 Code for the paper:
 
-> **Frozen Audio Foundation Model Embeddings for Forest Sound Classification: A Controlled Benchmark on FSC22**
-> *(citation will be updated upon acceptance)*
+> **Label-Efficient Forest Sound Classification with Frozen Audio Foundation Model Embeddings**
 
 ---
 
