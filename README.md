@@ -9,7 +9,7 @@ Code for the paper:
 
 ## Overview
 
-This repository contains the code to reproduce all experiments in the paper. The benchmark compares three families of forest sound classifiers on the [FSC22 dataset](https://www.kaggle.com/datasets/uwrfkaggler/ravdess-emotional-speech-audio):
+This repository contains the code to reproduce all experiments in the paper. The benchmark compares three families of forest sound classifiers on the [FSC22 dataset](https://www.kaggle.com/datasets/irmiot22/fsc22-dataset):
 
 - **Frozen audio foundation model embeddings** — seven pretrained encoders (CLAP, AST, BEATs, PANNs CNN14, YAMNet, VGGish, OpenL3) with shallow classifier heads
 - **Handcrafted acoustic features** — MFCC statistics with SVM; log-mel statistics with XGBoost
