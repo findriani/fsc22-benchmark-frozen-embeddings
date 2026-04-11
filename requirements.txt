@@ -1,0 +1,38 @@
+# Core
+numpy>=1.24
+pandas>=2.0
+scikit-learn>=1.3
+scipy>=1.11
+tqdm>=4.65
+librosa>=0.10
+matplotlib>=3.7
+Pillow>=10.0
+
+# Deep learning
+torch>=2.0
+torchvision>=0.15
+
+# Audio foundation models
+panns-inference>=0.1.0       # PANNs CNN14
+transformers>=4.30           # AST (HuggingFace)
+laion-clap>=1.1.4            # CLAP
+openl3 @ git+https://github.com/marl/openl3.git  # PyPI 0.4.1 has broken metadata
+
+# TensorFlow-based models (YAMNet)
+tensorflow>=2.12
+tensorflow-hub>=0.13
+
+# Handcrafted classifiers
+xgboost>=1.7
+
+# Statistical tests
+statsmodels>=0.14
+
+# BEATs — not pip-installable, clone source only:
+#   git clone https://github.com/microsoft/unilm.git /workspace/unilm
+#   The extractor adds /workspace/unilm/beats to sys.path automatically.
+
+# VGGish — loaded via torch.hub (harritaylor/torchvggish)
+# No separate pip install needed, but requires:
+soundfile>=0.12
+resampy>=0.2.1,<0.3.0  # openl3 requires <0.3.0

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Data and large files
+data/FSC22/
+data/splits/
+data/augmented/
+extraction/embeddings/
+checkpoints/
+
+# Results (generated outputs)
+results/
+
+# Logs
+logs/
+
+# Model downloads
+*.pt
+*.pth
+*.ckpt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
