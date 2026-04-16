@@ -1,19 +1,19 @@
 # FSC22 Frozen Embedding Benchmark
 
-A systematic benchmark comparing frozen general-purpose audio foundation model embeddings against handcrafted features and custom-trained CNNs on the **FSC22 Forest Sound Classification dataset** (27 classes).
+A systematic benchmark comparing frozen general-purpose audio foundation model embeddings against handcrafted features and ImageNet-pretrained CNN backbones on the **FSC22 Forest Sound Classification dataset** (27 classes).
 
 ---
 
 ## Research Overview
 
-**Question:** Can frozen embeddings from large pretrained audio models outperform custom CNNs on forest sound classification — especially in low-data scenarios?
+**Question:** Can frozen embeddings from large pretrained audio models outperform ImageNet-pretrained CNN backbones on forest sound classification — especially in low-data scenarios?
 
 **Three-arm comparison:**
 | Arm | Models | Classifier |
 |---|---|---|
 | Frozen Embeddings | PANNs CNN14, BEATs, AST, CLAP, OpenL3, YAMNet, VGGish | LR, SVM, MLP |
 | Handcrafted Features | MFCC stats, Log-mel stats | SVM, XGBoost |
-| Custom CNN | MobileNetV2, ResNet-18, EfficientNet-B0, DenseNet-121 | Softmax head |
+| CNN Backbones | MobileNetV2, ResNet-18, EfficientNet-B0, DenseNet-121 | Softmax head |
 
 **Experiments:**
 - **E1** — Full dataset benchmark (5 seeds × 7 embeddings × 3 classifiers + CNN baselines)
