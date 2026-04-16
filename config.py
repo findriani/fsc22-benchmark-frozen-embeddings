@@ -133,6 +133,10 @@ CNN_ARCHITECTURES = {
         "name": "EfficientNet-B0",
         "pretrained": True,
     },
+    "densenet121": {
+        "name": "DenseNet-121",
+        "pretrained": True,
+    },
 }
 
 CNN_TRAINING = {

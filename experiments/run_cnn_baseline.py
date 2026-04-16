@@ -28,45 +28,49 @@ import config as cfg
 
 
 class FSC22SpectrogramDataset(Dataset):
-    """Dataset that generates log-mel spectrograms on the fly."""
+    """Dataset that loads pre-computed log-mel spectrograms from .npy files.
+
+    Falls back to on-the-fly librosa computation if the pre-computed file is
+    missing. Run data/precompute_spectrograms.py once before training to get
+    the full speedup (see LESSONS_LEARNED.md §10).
+    """
 
     def __init__(self, file_paths, labels, input_size=(224, 224), augment=False):
         self.file_paths = file_paths
         self.labels = labels
         self.input_size = input_size
         self.augment = augment
+        self.spec_dir = cfg.DATA_DIR / "spectrograms"
 
     def __len__(self):
         return len(self.file_paths)
 
     def __getitem__(self, idx):
-        audio_path = self.file_paths[idx]
+        audio_path = Path(self.file_paths[idx])
         label = self.labels[idx]
 
-        # Load audio
-        y, sr = librosa.load(audio_path, sr=cfg.SAMPLE_RATE, duration=cfg.AUDIO_DURATION, mono=True)
+        spec_path = self.spec_dir / (audio_path.stem + ".npy")
 
-        # Pad if shorter than expected
-        expected_len = int(cfg.SAMPLE_RATE * cfg.AUDIO_DURATION)
-        if len(y) < expected_len:
-            y = np.pad(y, (0, expected_len - len(y)))
+        if spec_path.exists():
+            # Fast path: load pre-computed (224, 224) float32 array
+            spec_array = np.load(spec_path)
         else:
-            y = y[:expected_len]
-
-        # Compute log-mel spectrogram
-        mel_spec = librosa.feature.melspectrogram(
-            y=y, sr=cfg.SAMPLE_RATE, n_mels=128, n_fft=2048, hop_length=512
-        )
-        log_mel = librosa.power_to_db(mel_spec, ref=np.max)
-
-        # Normalize to [0, 1]
-        log_mel = (log_mel - log_mel.min()) / (log_mel.max() - log_mel.min() + 1e-8)
-
-        # Resize to input_size
-        from PIL import Image
-        img = Image.fromarray((log_mel * 255).astype(np.uint8))
-        img = img.resize(self.input_size, Image.BILINEAR)
-        spec_array = np.array(img, dtype=np.float32) / 255.0
+            # Fallback: compute on the fly (slow — run precompute_spectrograms.py)
+            y, sr = librosa.load(audio_path, sr=cfg.SAMPLE_RATE, duration=cfg.AUDIO_DURATION, mono=True)
+            expected_len = int(cfg.SAMPLE_RATE * cfg.AUDIO_DURATION)
+            if len(y) < expected_len:
+                y = np.pad(y, (0, expected_len - len(y)))
+            else:
+                y = y[:expected_len]
+            mel_spec = librosa.feature.melspectrogram(
+                y=y, sr=cfg.SAMPLE_RATE, n_mels=128, n_fft=2048, hop_length=512
+            )
+            log_mel = librosa.power_to_db(mel_spec, ref=np.max)
+            log_mel = (log_mel - log_mel.min()) / (log_mel.max() - log_mel.min() + 1e-8)
+            from PIL import Image as PILImage
+            img = PILImage.fromarray((log_mel * 255).astype(np.uint8))
+            img = img.resize(self.input_size, PILImage.BILINEAR)
+            spec_array = np.array(img, dtype=np.float32) / 255.0
 
         # Stack to 3 channels (for pretrained models)
         spec_tensor = torch.tensor(spec_array).unsqueeze(0).repeat(3, 1, 1)
@@ -85,6 +89,9 @@ def build_model(architecture, num_classes):
     elif architecture == "efficientnet_b0":
         model = models.efficientnet_b0(weights=models.EfficientNet_B0_Weights.DEFAULT)
         model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
+    elif architecture == "densenet121":
+        model = models.densenet121(weights=models.DenseNet121_Weights.DEFAULT)
+        model.classifier = nn.Linear(model.classifier.in_features, num_classes)
     else:
         raise ValueError(f"Unknown architecture: {architecture}")
     return model

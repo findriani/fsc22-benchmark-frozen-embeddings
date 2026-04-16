@@ -6,17 +6,24 @@ __pycache__/
 # Data and large files
 data/FSC22/
 data/splits/
-data/augmented/
 extraction/embeddings/
 checkpoints/
 
-# Results (generated outputs)
+# Results (generated outputs — not versioned)
 results/
 
 # Logs
 logs/
 
-# Model downloads
+# Literature PDFs (large binaries -- store outside repo)
+literature/
+
+# Local-only docs
+RUNPOD_GUIDE.md
+paperplan.md
+paper/
+
+# Model downloads (torch hub cache etc.)
 *.pt
 *.pth
 *.ckpt

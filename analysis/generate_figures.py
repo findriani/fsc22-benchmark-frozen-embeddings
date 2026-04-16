@@ -90,9 +90,10 @@ def fig3_learning_curves(df):
             color=colors[arm_key], capsize=4, linewidth=2,
         )
 
-    ax.set_xlabel("Training Data (%)")
-    ax.set_ylabel("Macro-F1")
-    ax.legend(loc="lower right")
+    ax.set_xlabel("Training Data (%)", fontsize=14)
+    ax.set_ylabel("Macro-F1", fontsize=14)
+    ax.tick_params(axis="both", labelsize=12)
+    ax.legend(loc="lower right", fontsize=12)
     ax.set_xticks([10, 25, 50, 100])
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -139,13 +140,15 @@ def fig4_per_class_heatmap(df):
         return
 
     matrix = np.array(class_f1_matrix)
-    fig, ax = plt.subplots(figsize=(16, max(4, len(model_labels) * 1.2)))
+    fig, ax = plt.subplots(figsize=(18, max(5, len(model_labels) * 1.8)))
     im = ax.imshow(matrix, aspect="auto", cmap="YlOrRd", vmin=0, vmax=1)
     ax.set_yticks(range(len(model_labels)))
-    ax.set_yticklabels(model_labels)
+    ax.set_yticklabels(model_labels, fontsize=12)
     ax.set_xticks(range(len(classes)))
-    ax.set_xticklabels(classes, rotation=45, ha="right", fontsize=8)
-    plt.colorbar(im, label="F1 Score")
+    ax.set_xticklabels(classes, rotation=45, ha="right", fontsize=11)
+    cbar = plt.colorbar(im)
+    cbar.set_label("F1 Score", fontsize=13)
+    cbar.ax.tick_params(labelsize=11)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig4_per_class_heatmap.png", dpi=300)
     plt.close()
@@ -245,24 +248,25 @@ def fig6_all_models_ranked(df):
     stds = [r["std"] for r in rows]
     colors = [arm_colors[r["arm"]] for r in rows]
 
-    fig, ax = plt.subplots(figsize=(9, 7))
+    fig, ax = plt.subplots(figsize=(11, 8))
     y = np.arange(len(rows))
     bars = ax.barh(y, means, xerr=stds, capsize=3, color=colors, alpha=0.85, height=0.6)
     ax.set_yticks(y)
-    ax.set_yticklabels(labels, fontsize=8)
-    ax.set_xlabel("Macro-F1")
+    ax.set_yticklabels(labels, fontsize=11)
+    ax.set_xlabel("Macro-F1", fontsize=14)
+    ax.tick_params(axis="x", labelsize=12)
     ax.set_xlim(0.5, 1.0)
     ax.axvline(x=means[-1], color="gray", linewidth=0.8, linestyle="--", alpha=0.5)
 
-    # Value labels
-    for bar, m in zip(bars, means):
-        ax.text(m + 0.005, bar.get_y() + bar.get_height() / 2, f"{m:.3f}",
-                va="center", fontsize=8)
+    # Value labels — offset past the error bar cap
+    for bar, m, s in zip(bars, means, stds):
+        ax.text(m + s + 0.012, bar.get_y() + bar.get_height() / 2, f"{m:.3f}",
+                va="center", fontsize=10)
 
     # Legend
     from matplotlib.patches import Patch
     legend_elements = [Patch(facecolor=arm_colors[k], label=v) for k, v in arm_labels.items()]
-    ax.legend(handles=legend_elements, loc="lower right", fontsize=9)
+    ax.legend(handles=legend_elements, loc="lower right", fontsize=11)
     ax.grid(True, axis="x", alpha=0.3)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig6_all_models_ranked.png", dpi=300)
@@ -281,7 +285,7 @@ def fig7_classifier_sensitivity(df):
     x = np.arange(len(models))
     width = 0.25
 
-    fig, ax = plt.subplots(figsize=(12, 5))
+    fig, ax = plt.subplots(figsize=(13, 6))
     for i, clf in enumerate(classifiers):
         means, stds = [], []
         for model in models:
@@ -293,10 +297,11 @@ def fig7_classifier_sensitivity(df):
                label=clf_labels[clf], color=clf_colors[clf], alpha=0.85)
 
     ax.set_xticks(x)
-    ax.set_xticklabels(models, rotation=15, ha="right", fontsize=9)
-    ax.set_ylabel("Macro-F1")
+    ax.set_xticklabels(models, rotation=15, ha="right", fontsize=11)
+    ax.set_ylabel("Macro-F1", fontsize=14)
+    ax.tick_params(axis="y", labelsize=12)
     ax.set_ylim(0.55, 1.0)
-    ax.legend(fontsize=9)
+    ax.legend(fontsize=11)
     ax.grid(True, axis="y", alpha=0.3)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig7_classifier_sensitivity.png", dpi=300)
