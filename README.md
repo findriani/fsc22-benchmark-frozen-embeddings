@@ -2,7 +2,7 @@
 
 Code for the paper:
 
-> **Label-Efficient Forest Sound Classification with Frozen Audio Foundation Model Embeddings**
+> **Label Efficiency of Frozen Audio Foundation Model Embeddings for Forest Sound Classification**
 
 ---
 
