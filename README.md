@@ -198,18 +198,5 @@ python analysis/statistical_tests.py  # Significance tests (paired t-test, Cohen
 python analysis/top_confusions.py     # Top confused class pairs per arm
 ```
 
----
-
-## Estimated Compute (Single GPU, e.g. A40 / RTX 3090)
-
-| Phase | Time |
-|---|---|
-| Embedding extraction (7 models) | ~1-2 hours |
-| E1 embedding experiments (CPU) | ~1.5–2 hours |
-| E1 CNN training (4 archs × 5 seeds) | ~8-15 hours |
-| E3 low-data (all models × 4 fracs) | ~16-30 hours |
-| E5 efficiency | ~1 hour |
-| **Total** | **~28-50 hours** |
-
 Embeddings are extracted once and cached as `.npz` files, so E3 reuses them without re-running the heavy models.
 
